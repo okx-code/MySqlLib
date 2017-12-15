@@ -1,15 +1,16 @@
-package sh.okx.sql.query;
+package sh.okx.sql.database;
 
-import sh.okx.sql.api.query.ExecuteQuery;
+import sh.okx.sql.api.database.ExecuteTable;
 import sh.okx.sql.api.query.StatementSelect;
+import sh.okx.sql.query.StatementSelectImpl;
 
 import java.sql.Connection;
 
-public class ExecuteQueryImpl implements ExecuteQuery {
+public class ExecuteTableImpl implements ExecuteTable {
     private Connection connection;
     private String table;
 
-    public ExecuteQueryImpl(Connection connection, String table) {
+    public ExecuteTableImpl(Connection connection, String table) {
         this.connection = connection;
         this.table = table;
     }
@@ -17,10 +18,5 @@ public class ExecuteQueryImpl implements ExecuteQuery {
     @Override
     public StatementSelect select(String... columns) {
         return new StatementSelectImpl(connection, columns, table);
-    }
-
-    @Override
-    public StatementSelect selectAll() {
-        return new StatementSelectImpl(connection, null, table);
     }
 }

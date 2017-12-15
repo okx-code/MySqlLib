@@ -1,10 +1,7 @@
 package sh.okx.sql.api;
 
-import sh.okx.sql.api.query.ExecuteQuery;
-import sh.okx.sql.api.update.ExecuteUpdate;
 import sh.okx.sql.api.database.ExecuteDatabase;
-
-import java.sql.SQLException;
+import sh.okx.sql.api.database.ExecuteTable;
 
 public interface Connection {
     /**
@@ -23,22 +20,27 @@ public interface Connection {
     ExecuteDatabase database();
 
     /**
-     * Perform query statements on the specified table
+     * Get an object to manipulate the specified table, such as performing statements on it.
      * @param table The name of the table
-     * @return The object about which to perform query statements on the specified table
+     * @return The object for manipulating the table.
      */
-    ExecuteQuery query(String table);
+    ExecuteTable table(String table);
 
     /**
-     * Perform update statements on the specified table
-     * @param table The name of the table
-     * @return The object about which to perform update statements on the specified table
+     * Update the database with a statement synchronously.
+     * @return The returned row count or <code>-1</code> on failure.
      */
-    ExecuteUpdate update(String table);
+    int executeUpdate(String statement);
 
     /**
-     * Close the current connection to the MySQL database
-     * @throws SQLException
+     * Get the underlying {@link java.sql.Connection} within this object.
+     * @return The underlying connection.
      */
-    void close() throws SQLException;
+    java.sql.Connection getUnderlying();
+
+    /**
+     * Close the current connection to the MySQL database.
+     * @throws SqlException If there was an error closing the connection.
+     */
+    void close() throws SqlException;
 }

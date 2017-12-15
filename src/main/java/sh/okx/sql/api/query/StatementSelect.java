@@ -1,8 +1,9 @@
 package sh.okx.sql.api.query;
 
+import sh.okx.sql.api.SqlException;
 import sh.okx.sql.api.clause.ClauseWhere;
 
-import java.sql.SQLException;
+import java.util.concurrent.CompletableFuture;
 
 public interface StatementSelect {
     /**
@@ -29,7 +30,13 @@ public interface StatementSelect {
     /**
      * Execute the statement.
      * @return The results of the statement.
-     * @throws SQLException
+     * @throws SqlException If a {@link java.sql.SQLException} occurs.
      */
-    QueryResults execute() throws SQLException;
+    QueryResults execute();
+
+    /**
+     * Execute the statement asynchronously.
+     * @see StatementSelect#execute()
+     */
+    CompletableFuture<QueryResults> executeAsync();
 }

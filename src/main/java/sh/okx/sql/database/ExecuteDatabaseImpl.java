@@ -1,10 +1,11 @@
 package sh.okx.sql.database;
 
+import sh.okx.sql.api.Connection;
 import sh.okx.sql.api.database.ExecuteDatabase;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.concurrent.CompletableFuture;
 
 public class ExecuteDatabaseImpl implements ExecuteDatabase {
     private Connection connection;
@@ -23,7 +24,7 @@ public class ExecuteDatabaseImpl implements ExecuteDatabase {
     @Override
     public boolean exists() {
         try {
-            PreparedStatement statement = connection.prepareStatement("SHOW DATABASES LIKE ?;");
+            PreparedStatement statement = connection.getUnderlying().prepareStatement("SHOW DATABASES LIKE ?;");
             statement.setString(1, database);
             return statement.executeQuery().next();
         } catch (SQLException e) {
@@ -33,42 +34,55 @@ public class ExecuteDatabaseImpl implements ExecuteDatabase {
     }
 
     @Override
+    public CompletableFuture<Boolean> existsAsync() {
+        return CompletableFuture.supplyAsync(this::exists);
+    }
+
+    @Override
     public int select() {
-        try {
-            return connection.createStatement().executeUpdate("USE " + database + ";");
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return -1;
+        int value = connection.executeUpdate("USE " + database + ";");
+        if(value != -1) {
+            try {
+                connection.getUnderlying().setCatalog(database);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
+        return value;
+    }
+
+    @Override
+    public CompletableFuture<Integer> selectAsync() {
+        return CompletableFuture.supplyAsync(this::select);
     }
 
     @Override
     public int delete() {
-        try {
-            return connection.createStatement().executeUpdate("DROP DATABASE " + database + ";");
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return -1;
-        }
+        return connection.executeUpdate("DROP DATABASE " + database + ";");
+    }
+
+    @Override
+    public CompletableFuture<Integer> deleteAsync() {
+        return CompletableFuture.supplyAsync(this::delete);
     }
 
     @Override
     public int create() {
-        try {
-            return connection.createStatement().executeUpdate("CREATE DATABASE " + database + ";");
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return -1;
-        }
+        return connection.executeUpdate("CREATE DATABASE " + database + ";");
+    }
+
+    @Override
+    public CompletableFuture<Integer> createAsync() {
+        return CompletableFuture.supplyAsync(this::create);
     }
 
     @Override
     public int createIfNotExists() {
-        try {
-            return connection.createStatement().executeUpdate("CREATE DATABASE IF NOT EXISTS " + database + ";");
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return -1;
-        }
+        return connection.executeUpdate("CREATE DATABASE IF NOT EXISTS " + database + ";");
+    }
+
+    @Override
+    public CompletableFuture<Integer> createIfNotExistsAsync() {
+        return CompletableFuture.supplyAsync(this::createIfNotExists);
     }
 }

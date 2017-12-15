@@ -1,6 +1,6 @@
 package sh.okx.sql.api.query;
 
-import java.sql.SQLException;
+import sh.okx.sql.api.SqlException;
 
 public interface QueryResults {
     /**
@@ -12,9 +12,9 @@ public interface QueryResults {
     /**
      * Move on to the next row in the returned result set
      * @return Whether this operation succeeded
-     * @throws SQLException
+     * @throws SqlException If an error occurred.
      */
-    boolean checkNext() throws SQLException;
+    boolean checkNext() throws SqlException;
 
     /**
      * Get the value at the specified column

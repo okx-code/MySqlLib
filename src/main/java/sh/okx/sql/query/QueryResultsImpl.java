@@ -1,5 +1,6 @@
 package sh.okx.sql.query;
 
+import sh.okx.sql.api.SqlException;
 import sh.okx.sql.api.query.QueryResults;
 
 import java.sql.ResultSet;
@@ -28,27 +29,34 @@ public class QueryResultsImpl implements QueryResults, Iterable<QueryResults> {
     }
 
     @Override
-    public boolean checkNext() throws SQLException {
-        return resultSet.next();
+    public boolean checkNext() {
+        try {
+            return resultSet.next();
+        } catch (SQLException e) {
+            throw new SqlException(e);
+        }
     }
 
     @Override
     public String getString(String column) {
+
         try {
+            assert !resultSet.isBeforeFirst();
+
             return resultSet.getString(column);
         } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
+            throw new SqlException(e);
         }
     }
 
     @Override
     public String getString(int column) {
         try {
+            assert !resultSet.isBeforeFirst();
+
             return resultSet.getString(column);
         } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
+            throw new SqlException(e);
         }
     }
 
@@ -62,8 +70,7 @@ public class QueryResultsImpl implements QueryResults, Iterable<QueryResults> {
                     resultSet.previous();
                     return yes;
                 } catch (SQLException e) {
-                    e.printStackTrace();
-                    return false;
+                    throw new SqlException(e);
                 }
             }
 
@@ -73,8 +80,7 @@ public class QueryResultsImpl implements QueryResults, Iterable<QueryResults> {
                     resultSet.next();
                     return self;
                 } catch (SQLException e) {
-                    e.printStackTrace();
-                    return null;
+                    throw new SqlException(e);
                 }
             }
         };

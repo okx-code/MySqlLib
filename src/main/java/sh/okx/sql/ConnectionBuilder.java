@@ -1,6 +1,8 @@
 package sh.okx.sql;
 
 import sh.okx.sql.api.Connection;
+import sh.okx.sql.api.PooledConnection;
+import sh.okx.sql.api.SqlException;
 
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -52,16 +54,33 @@ public class ConnectionBuilder {
         return this;
     }
 
-    public Connection build() throws SQLException {
+    public Connection build() {
+        String url = "jdbc:mysql://" + host + ":" + port;
+        if(useDatabase) {
+            url += "/" + database;
+        }
+
+        try {
+            if (useCredentials) {
+                return new ConnectionImpl(DriverManager.getConnection(url, user, password));
+            }
+
+            return new ConnectionImpl(DriverManager.getConnection(url));
+        } catch(SQLException e) {
+            throw new SqlException(e);
+        }
+    }
+
+    public PooledConnection buildPool() {
         String url = "jdbc:mysql://" + host + ":" + port;
         if(useDatabase) {
             url += "/" + database;
         }
 
         if (useCredentials) {
-            return new ConnectionImpl(DriverManager.getConnection(url, user, password));
+            return new PooledConnectionImpl(url, user, password);
         }
 
-        return new ConnectionImpl(DriverManager.getConnection(url));
+        return new PooledConnectionImpl(url);
     }
 }

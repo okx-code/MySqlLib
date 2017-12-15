@@ -1,13 +1,12 @@
 package sh.okx.sql;
 
 import sh.okx.sql.api.Connection;
+import sh.okx.sql.api.SqlException;
 import sh.okx.sql.api.database.ExecuteDatabase;
-import sh.okx.sql.api.query.ExecuteQuery;
-import sh.okx.sql.api.update.ExecuteUpdate;
+import sh.okx.sql.api.database.ExecuteTable;
 import sh.okx.sql.database.ExecuteDatabaseImpl;
-import sh.okx.sql.query.ExecuteQueryImpl;
+import sh.okx.sql.database.ExecuteTableImpl;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class ConnectionImpl implements Connection {
@@ -19,33 +18,48 @@ public class ConnectionImpl implements Connection {
 
     @Override
     public ExecuteDatabase database(String name) {
-        return new ExecuteDatabaseImpl(connection, name);
+        return new ExecuteDatabaseImpl(this, name);
     }
 
     @Override
     public ExecuteDatabase database() {
+        String catalog = null;
         try {
-            ResultSet rs = connection.createStatement().executeQuery("SELECT DATABASE() FROM DUAL;");
-            rs.next();
-            return new ExecuteDatabaseImpl(connection, rs.getString("DATABASE()"));
-        } catch (SQLException e) {
-            e.printStackTrace();
+            catalog = connection.getCatalog();
+        } catch (SQLException ignored) {}
+
+        if(catalog == null) {
             return null;
+        }
+
+        return new ExecuteDatabaseImpl(this, catalog);
+    }
+
+    @Override
+    public ExecuteTable table(String table) {
+        return new ExecuteTableImpl(connection, table);
+    }
+
+    @Override
+    public int executeUpdate(String statement) {
+        try {
+            return connection.createStatement().executeUpdate(statement);
+        } catch (SQLException e) {
+            throw new SqlException(e);
         }
     }
 
     @Override
-    public ExecuteQuery query(String table) {
-        return new ExecuteQueryImpl(connection, table);
+    public java.sql.Connection getUnderlying() {
+        return connection;
     }
 
     @Override
-    public ExecuteUpdate update(String table) {
-        return null;
-    }
-
-    @Override
-    public void close() throws SQLException {
-        connection.close();
+    public void close() {
+        try {
+            connection.close();
+        } catch (SQLException e) {
+            throw new SqlException(e);
+        }
     }
 }
