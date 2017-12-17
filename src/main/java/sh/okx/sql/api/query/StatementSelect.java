@@ -1,11 +1,18 @@
 package sh.okx.sql.api.query;
 
-import sh.okx.sql.api.SqlException;
+import sh.okx.sql.api.Statement;
 import sh.okx.sql.api.clause.ClauseWhere;
 
 import java.util.concurrent.CompletableFuture;
 
-public interface StatementSelect {
+public interface StatementSelect extends Statement {
+    /**
+     * A string to join the table names by in the select statement.
+     * @param join What to join the tables with. Default is "JOIN".
+     * @return This object.
+     */
+    StatementSelect joinTables(String join);
+
     /**
      * Set the "WHERE" clause in the statement as a string. ie: "name = 'Alice'".
      * It is recommended to use the higher level version of this: {@link StatementSelect#where()}
@@ -22,17 +29,11 @@ public interface StatementSelect {
 
     /**
      * Prepare an object in the "WHERE" clause to prevent SQL injection.
+     * This is automatically called by {@link ClauseWhere#then()}.
      * @param o The object to replace the next ? in a "WHERE" clause.
      * @return This object.
      */
     StatementSelect prepare(Object o);
-
-    /**
-     * Execute the statement.
-     * @return The results of the statement.
-     * @throws SqlException If a {@link java.sql.SQLException} occurs.
-     */
-    QueryResults execute();
 
     /**
      * Execute the statement asynchronously.

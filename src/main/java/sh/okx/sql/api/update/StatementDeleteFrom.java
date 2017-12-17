@@ -1,4 +1,4 @@
 package sh.okx.sql.api.update;
 
-public interface StatementDeleteFrom {
+public interface StatementDeleteFrom extends StatementUpdate {
 }

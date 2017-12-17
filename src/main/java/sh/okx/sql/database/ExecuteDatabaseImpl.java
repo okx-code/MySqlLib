@@ -24,7 +24,7 @@ public class ExecuteDatabaseImpl implements ExecuteDatabase {
     @Override
     public boolean exists() {
         try {
-            PreparedStatement statement = connection.getUnderlying().prepareStatement("SHOW DATABASES LIKE ?;");
+            PreparedStatement statement = connection.getUnderlying().prepareStatement("SHOW DATABASES LIKE ?");
             statement.setString(1, database);
             return statement.executeQuery().next();
         } catch (SQLException e) {
@@ -40,7 +40,7 @@ public class ExecuteDatabaseImpl implements ExecuteDatabase {
 
     @Override
     public int select() {
-        int value = connection.executeUpdate("USE " + database + ";");
+        int value = connection.executeUpdate("USE " + database);
         if(value != -1) {
             try {
                 connection.getUnderlying().setCatalog(database);
@@ -58,7 +58,7 @@ public class ExecuteDatabaseImpl implements ExecuteDatabase {
 
     @Override
     public int delete() {
-        return connection.executeUpdate("DROP DATABASE " + database + ";");
+        return connection.executeUpdate("DROP DATABASE " + database);
     }
 
     @Override
@@ -68,7 +68,7 @@ public class ExecuteDatabaseImpl implements ExecuteDatabase {
 
     @Override
     public int create() {
-        return connection.executeUpdate("CREATE DATABASE " + database + ";");
+        return connection.executeUpdate("CREATE DATABASE " + database);
     }
 
     @Override
@@ -78,7 +78,7 @@ public class ExecuteDatabaseImpl implements ExecuteDatabase {
 
     @Override
     public int createIfNotExists() {
-        return connection.executeUpdate("CREATE DATABASE IF NOT EXISTS " + database + ";");
+        return connection.executeUpdate("CREATE DATABASE IF NOT EXISTS " + database);
     }
 
     @Override

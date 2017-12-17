@@ -1,6 +1,6 @@
 package sh.okx.sql.api.clause;
 
-public interface ClauseWhere<E> {
+public interface ClauseWhere<E> extends Clause<E> {
     /**
      * Add an equals operation to the "WHERE" clause.
      * Calling this method with 'id' and '6' represents 'id=6' in the "WHERE" clause
@@ -21,14 +21,15 @@ public interface ClauseWhere<E> {
 
     /**
      * Add an "AND" operation to the "WHERE" clause.
-     * This requires multiple operations to be true.
+     * This requires both of the operations on its left and right side to be true.
      * @return This object.
      */
     ClauseWhere<E> and();
 
     /**
-     * Get the statement back from this object.
-     * @return The original statement.
+     * Add an "OR" operation to the "WHERE" clause.
+     * This requires at least one operation on either side of it to be true.
+     * @return This object.
      */
-    E then();
+    ClauseWhere<E> or();
 }

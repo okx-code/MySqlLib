@@ -7,7 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Iterator;
 
-public class QueryResultsImpl implements QueryResults, Iterable<QueryResults> {
+public class QueryResultsImpl implements QueryResults {
     private ResultSet resultSet;
     private QueryResultsImpl self;
 
@@ -39,7 +39,6 @@ public class QueryResultsImpl implements QueryResults, Iterable<QueryResults> {
 
     @Override
     public String getString(String column) {
-
         try {
             assert !resultSet.isBeforeFirst();
 

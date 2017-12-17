@@ -31,8 +31,19 @@ public class ClauseWhereImpl<E extends StatementSelect> implements ClauseWhere<E
     }
 
     @Override
+    public ClauseWhere<E> or() {
+        where.append(" OR ");
+        return this;
+    }
+
+    @Override
     public E then() {
-        statement.where(where.toString());
+        statement.where(define());
         return statement;
+    }
+
+    @Override
+    public String define() {
+        return where.toString();
     }
 }

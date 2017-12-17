@@ -1,4 +1,4 @@
 package sh.okx.sql.api.update;
 
-public interface StatementInsertInto {
+public interface StatementInsertInto extends StatementUpdate {
 }

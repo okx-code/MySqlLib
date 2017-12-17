@@ -2,7 +2,7 @@ package sh.okx.sql.api.query;
 
 import sh.okx.sql.api.SqlException;
 
-public interface QueryResults {
+public interface QueryResults extends Iterable<QueryResults> {
     /**
      * Move on to the next row in the returned result set
      * @return This object.

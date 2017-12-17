@@ -20,11 +20,11 @@ public interface Connection {
     ExecuteDatabase database();
 
     /**
-     * Get an object to manipulate the specified table, such as performing statements on it.
-     * @param table The name of the table
-     * @return The object for manipulating the table.
+     * Get an object to manipulate the specified table(s), such as performing statements on it.
+     * @param tables The name(s) of the table(s)
+     * @return The object for manipulating the table(s).
      */
-    ExecuteTable table(String table);
+    ExecuteTable table(String... tables);
 
     /**
      * Update the database with a statement synchronously.

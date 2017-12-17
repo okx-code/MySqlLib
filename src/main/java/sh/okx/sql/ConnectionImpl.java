@@ -36,8 +36,9 @@ public class ConnectionImpl implements Connection {
     }
 
     @Override
-    public ExecuteTable table(String table) {
-        return new ExecuteTableImpl(connection, table);
+    public ExecuteTable table(String... tables) {
+        assert tables.length > 0;
+        return new ExecuteTableImpl(this, tables);
     }
 
     @Override
