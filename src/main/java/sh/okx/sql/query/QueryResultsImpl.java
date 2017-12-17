@@ -1,5 +1,4 @@
 package sh.okx.sql.query;
-
 import sh.okx.sql.api.SqlException;
 import sh.okx.sql.api.query.QueryResults;
 
@@ -10,26 +9,23 @@ import java.util.Iterator;
 public class QueryResultsImpl implements QueryResults {
     private ResultSet resultSet;
     private QueryResultsImpl self;
-
     public QueryResultsImpl(ResultSet resultSet) {
         this.resultSet = resultSet;
         this.self = this;
     }
 
-
     @Override
-    public QueryResults next() {
+    public QueryResults getNext() {
         try {
             resultSet.next();
             return this;
         } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
+            throw new SqlException(e);
         }
     }
 
     @Override
-    public boolean checkNext() {
+    public boolean next() {
         try {
             return resultSet.next();
         } catch (SQLException e) {
@@ -37,32 +33,23 @@ public class QueryResultsImpl implements QueryResults {
         }
     }
 
-    @Override
-    public String getString(String column) {
-        try {
-            assert !resultSet.isBeforeFirst();
-
-            return resultSet.getString(column);
-        } catch (SQLException e) {
-            throw new SqlException(e);
-        }
+    public ResultSet getResultSet() {
+        return resultSet;
     }
 
-    @Override
-    public String getString(int column) {
-        try {
-            assert !resultSet.isBeforeFirst();
-
-            return resultSet.getString(column);
-        } catch (SQLException e) {
-            throw new SqlException(e);
+    public <E extends Enum> E getEnum(String column, Class<E> theEnum) {
+        E[] constants = theEnum.getEnumConstants();
+        for(E constant : constants) {
+            if(constant.name().equalsIgnoreCase(column)) {
+                return constant;
+            }
         }
+        return null;
     }
-
-    @Override
+    
     public Iterator<QueryResults> iterator() {
         return new Iterator<QueryResults>() {
-            @Override
+            
             public boolean hasNext() {
                 try {
                     boolean yes = resultSet.next();
@@ -72,8 +59,7 @@ public class QueryResultsImpl implements QueryResults {
                     throw new SqlException(e);
                 }
             }
-
-            @Override
+            
             public QueryResults next() {
                 try {
                     resultSet.next();

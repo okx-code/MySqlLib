@@ -78,9 +78,9 @@ public class ConnectionBuilder {
         }
 
         if (useCredentials) {
-            return new PooledConnectionImpl(url, user, password);
+            return new PooledConnection(url, user, password);
         }
 
-        return new PooledConnectionImpl(url);
+        return new PooledConnection(url);
     }
 }
