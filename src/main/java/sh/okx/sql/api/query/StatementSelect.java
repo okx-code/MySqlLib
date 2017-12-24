@@ -1,11 +1,10 @@
 package sh.okx.sql.api.query;
 
-import sh.okx.sql.api.Statement;
 import sh.okx.sql.api.clause.ClauseWhere;
 
 import java.util.concurrent.CompletableFuture;
 
-public interface StatementSelect extends Statement {
+public interface StatementSelect extends StatementQuery {
     /**
      * A string to join the table names by in the select statement.
      * @param join What to join the tables with. Default is "JOIN".

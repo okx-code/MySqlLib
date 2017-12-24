@@ -54,9 +54,7 @@ public class StatementSelectImpl implements StatementSelect {
     @Override
     public QueryResults execute() {
         try {
-            PreparedStatement statement = connection.prepareStatement("SELECT " +
-                    (columns == null || columns.length == 0 ? "*" : String.join(",", columns)) +
-                    " FROM " + String.join(" " + join + " ", tables) + (where == null ? "" : " WHERE " + where));
+            PreparedStatement statement = connection.prepareStatement(toString());
 
             for(int i = 0; i < prepared.size(); i++) {
                 statement.setObject(i+1, prepared.get(i));
@@ -72,5 +70,12 @@ public class StatementSelectImpl implements StatementSelect {
     @Override
     public CompletableFuture<QueryResults> executeAsync() {
         return CompletableFuture.supplyAsync(this::execute);
+    }
+
+    @Override
+    public String toString() {
+        return "SELECT " +
+                (columns == null || columns.length == 0 ? "*" : String.join(",", columns)) +
+                " FROM " + String.join(" " + join + " ", tables) + (where == null ? "" : " WHERE " + where);
     }
 }
