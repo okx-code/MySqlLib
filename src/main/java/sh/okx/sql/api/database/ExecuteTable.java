@@ -2,6 +2,7 @@ package sh.okx.sql.api.database;
 
 import sh.okx.sql.api.query.StatementSelect;
 import sh.okx.sql.api.update.StatementCreateTable;
+import sh.okx.sql.api.update.StatementDeleteFrom;
 import sh.okx.sql.api.update.StatementDropTable;
 
 import java.util.concurrent.CompletableFuture;
@@ -27,7 +28,13 @@ public interface ExecuteTable {
      * Please note that this method is not escaped!
      * @return An object used to delete (drop) tables.
      */
-    StatementDropTable delete();
+    StatementDropTable drop();
+
+    /**
+     * Delete from the table(s).
+     * @return An object used to delete from the table(s).
+     */
+    StatementDeleteFrom delete();
 
     /**
      * Check whether all of the tables this object represent exist.

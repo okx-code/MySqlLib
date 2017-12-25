@@ -96,10 +96,10 @@ public class StatementCreateTableImpl implements StatementCreateTable {
         if (ifNotExists) {
             sb.append("IF NOT EXISTS ");
         }
-        sb.append(table);
+        sb.append(table).append(" ");
 
         if (like != null) {
-            return connection.executeUpdate(sb.append(" LIKE ").append(like).toString());
+            return connection.executeUpdate(sb.append("LIKE ").append(like).toString());
         }
 
         if(columns.size() > 0) {

@@ -4,9 +4,11 @@ import sh.okx.sql.api.Connection;
 import sh.okx.sql.api.database.ExecuteTable;
 import sh.okx.sql.api.query.StatementSelect;
 import sh.okx.sql.api.update.StatementCreateTable;
+import sh.okx.sql.api.update.StatementDeleteFrom;
 import sh.okx.sql.api.update.StatementDropTable;
 import sh.okx.sql.query.StatementSelectImpl;
 import sh.okx.sql.update.StatementCreateTableImpl;
+import sh.okx.sql.update.StatementDeleteFromImpl;
 import sh.okx.sql.update.StatementDropTableImpl;
 
 import java.sql.PreparedStatement;
@@ -35,8 +37,13 @@ public class ExecuteTableImpl implements ExecuteTable {
     }
 
     @Override
-    public StatementDropTable delete() {
+    public StatementDropTable drop() {
         return new StatementDropTableImpl(connection, tables);
+    }
+
+    @Override
+    public StatementDeleteFrom delete() {
+        return new StatementDeleteFromImpl(connection, tables);
     }
 
     @Override

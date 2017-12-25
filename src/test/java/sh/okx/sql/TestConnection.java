@@ -78,7 +78,7 @@ public class TestConnection {
         ExecuteTable idTest = connection.table("test_ids");
 
         idTest.existsAsync().thenAccept(a -> System.out.println("Exists: " + a));
-        System.out.println("Delete table: " + idTest.delete().ifExists().execute());
+        System.out.println("Delete table: " + idTest.drop().ifExists().execute());
         System.out.println("Create table: " + idTest.create()
                 .column().name("id").notNull().primary().key().autoIncrement()
                 .type(new NumericDataType(NumericDataType.Type.BIGINT)).then()
@@ -91,5 +91,30 @@ public class TestConnection {
         Predicate<String> t = String::isEmpty;
         t.test("f");
         System.out.println(t.getClass().getSimpleName());
+    }
+
+    @Test
+    public void testDelete() throws SQLException {
+        Connection connection = new ConnectionBuilder()
+                .setCredentials("test", "test")
+                .setDatabase("test")
+                .build();
+
+        connection.table("test_delete").create().ifNotExists().column("t TEXT").execute();
+        connection.table("test_delete").delete().execute();
+
+        System.out.println("Creation length (0): " + connection.table("test_delete").select("COUNT(*)")
+                .execute().getNext().getResultSet().getString("COUNT(*)"));
+
+        connection.executeUpdate("INSERT INTO test_delete (t) VALUES ('hello')");
+        connection.executeUpdate("INSERT INTO test_delete (t) VALUES ('hi')");
+
+        System.out.println("Insertion length (2): " + connection.table("test_delete").select("COUNT(*)")
+                .execute().getNext().getResultSet().getString("COUNT(*)"));
+
+        connection.table("test_delete").delete().where().prepareEquals("t", "hi").then().execute();
+
+        System.out.println("Deletion length (1): " + connection.table("test_delete").select("COUNT(*)")
+                .execute().getNext().getResultSet().getString("COUNT(*)"));
     }
 }

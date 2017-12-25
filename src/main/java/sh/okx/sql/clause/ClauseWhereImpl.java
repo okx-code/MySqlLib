@@ -1,9 +1,9 @@
 package sh.okx.sql.clause;
 
+import sh.okx.sql.api.StatementWhere;
 import sh.okx.sql.api.clause.ClauseWhere;
-import sh.okx.sql.api.query.StatementSelect;
 
-public class ClauseWhereImpl<E extends StatementSelect> implements ClauseWhere<E> {
+public class ClauseWhereImpl<E extends StatementWhere> implements ClauseWhere<E> {
     private E statement;
     private StringBuilder where = new StringBuilder();
 
