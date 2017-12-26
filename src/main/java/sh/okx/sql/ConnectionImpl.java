@@ -7,6 +7,7 @@ import sh.okx.sql.api.database.ExecuteTable;
 import sh.okx.sql.database.ExecuteDatabaseImpl;
 import sh.okx.sql.database.ExecuteTableImpl;
 
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class ConnectionImpl implements Connection {
@@ -42,9 +43,19 @@ public class ConnectionImpl implements Connection {
     }
 
     @Override
-    public int executeUpdate(String statement) {
+    public int executeUpdate(String statement, String... prepared) {
         try {
-            return connection.createStatement().executeUpdate(statement);
+            if(prepared.length < 1) {
+                return connection.createStatement().executeUpdate(statement);
+            }
+
+            PreparedStatement preparedStatement = connection.prepareStatement(statement);
+
+            for(int i = 0; i < prepared.length; i++) {
+                preparedStatement.setObject(i+1, prepared[i]);
+            }
+
+            return preparedStatement.executeUpdate();
         } catch (SQLException e) {
             throw new SqlException(e);
         }
