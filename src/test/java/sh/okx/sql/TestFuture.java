@@ -17,10 +17,6 @@ public class TestFuture {
             }
         });
 
-        cp.thenAccept(System.out::println);
-
-        while(true) {
-
-        }
+        System.out.println(cp.join());
     }
 }

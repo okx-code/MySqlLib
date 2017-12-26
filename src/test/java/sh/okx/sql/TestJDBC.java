@@ -9,7 +9,7 @@ public class TestJDBC {
     public void test() throws ClassNotFoundException, SQLException {
         Class.forName("com.mysql.jdbc.Driver");
 
-        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/test", "root", "root");
+        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/test", "test", "test");
 
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery("SELECT * FROM my_table");
