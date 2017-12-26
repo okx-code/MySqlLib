@@ -39,4 +39,6 @@ public interface Connection extends AutoCloseable {
      * @return The underlying connection.
      */
     java.sql.Connection getUnderlying();
+
+    void close() throws SqlException;
 }
