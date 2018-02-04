@@ -6,10 +6,12 @@ import sh.okx.sql.api.query.StatementSelect;
 import sh.okx.sql.api.update.StatementCreateTable;
 import sh.okx.sql.api.update.StatementDeleteFrom;
 import sh.okx.sql.api.update.StatementDropTable;
+import sh.okx.sql.api.update.StatementInsertInto;
 import sh.okx.sql.query.StatementSelectImpl;
 import sh.okx.sql.update.StatementCreateTableImpl;
 import sh.okx.sql.update.StatementDeleteFromImpl;
 import sh.okx.sql.update.StatementDropTableImpl;
+import sh.okx.sql.update.StatementInsertIntoImpl;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -44,6 +46,12 @@ public class ExecuteTableImpl implements ExecuteTable {
     @Override
     public StatementDeleteFrom delete() {
         return new StatementDeleteFromImpl(connection, tables);
+    }
+
+    @Override
+    public StatementInsertInto insert() {
+        assert tables.length == 1;
+        return new StatementInsertIntoImpl(connection, tables[0]);
     }
 
     @Override

@@ -4,6 +4,7 @@ import sh.okx.sql.api.query.StatementSelect;
 import sh.okx.sql.api.update.StatementCreateTable;
 import sh.okx.sql.api.update.StatementDeleteFrom;
 import sh.okx.sql.api.update.StatementDropTable;
+import sh.okx.sql.api.update.StatementInsertInto;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -35,6 +36,13 @@ public interface ExecuteTable {
      * @return An object used to delete from the table(s).
      */
     StatementDeleteFrom delete();
+
+    /**
+     * Insert into a table.
+     * You cannot insert into multiple tables at once (this will throw an AssertionError if you try).
+     * @return An object used to insert into a table.
+     */
+    StatementInsertInto insert();
 
     /**
      * Check whether all of the tables this object represent exist.

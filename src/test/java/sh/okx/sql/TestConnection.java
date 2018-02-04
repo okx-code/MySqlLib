@@ -106,8 +106,8 @@ public class TestConnection {
         System.out.println("Creation length (0): " + connection.table("test_delete").select("COUNT(*)")
                 .execute().getNext().getResultSet().getString("COUNT(*)"));
 
-        connection.executeUpdate("INSERT INTO test_delete (t) VALUES ('hello')");
-        connection.executeUpdate("INSERT INTO test_delete (t) VALUES ('hi')");
+        connection.table("test_delete").insert().value("t", "hello").execute();
+        connection.table("test_delete").insert().value("t", "hi").execute();
 
         System.out.println("Insertion length (2): " + connection.table("test_delete").select("COUNT(*)")
                 .execute().getNext().getResultSet().getString("COUNT(*)"));
@@ -115,6 +115,22 @@ public class TestConnection {
         connection.table("test_delete").delete().where().prepareEquals("t", "hi").then().execute();
 
         System.out.println("Deletion length (1): " + connection.table("test_delete").select("COUNT(*)")
+                .execute().getNext().getResultSet().getString("COUNT(*)"));
+    }
+
+    @Test
+    public void testInsert() throws SQLException {
+        Connection connection = new ConnectionBuilder()
+                .setCredentials("test", "test")
+                .setDatabase("test")
+                .build();
+
+        connection.table("test_insert").create().ifNotExists().column("t TEXT").execute();
+        connection.table("test_insert").delete().execute();
+
+        connection.table("test_insert").insert().value("t", "hello").execute();
+
+        System.out.println("Insertion length (1): " + connection.table("test_insert").select("COUNT(*)")
                 .execute().getNext().getResultSet().getString("COUNT(*)"));
     }
 }
